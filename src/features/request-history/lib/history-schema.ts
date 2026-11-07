@@ -1,9 +1,9 @@
-import { z } from 'zod'
+import * as z from 'zod/mini'
 import { AUTH_TYPES } from '@/types/auth'
 import { BODY_MODES, HTTP_METHODS } from '@/types/http'
 
 const keyValueEntrySchema = z.object({
-  id: z.string().min(1),
+  id: z.string().check(z.minLength(1)),
   key: z.string(),
   value: z.string(),
   enabled: z.boolean(),
@@ -23,11 +23,11 @@ export const storedRequestSchema = z.object({
 })
 
 export const historyEntrySchema = z.object({
-  id: z.string().min(1),
-  savedAt: z.number().int().nonnegative(),
+  id: z.string().check(z.minLength(1)),
+  savedAt: z.int().check(z.nonnegative()),
   request: storedRequestSchema,
   result: z.discriminatedUnion('ok', [
-    z.object({ ok: z.literal(true), status: z.number().int(), durationMs: z.number().nonnegative() }),
+    z.object({ ok: z.literal(true), status: z.int(), durationMs: z.number().check(z.nonnegative()) }),
     z.object({ ok: z.literal(false), errorTitle: z.string() }),
   ]),
 })

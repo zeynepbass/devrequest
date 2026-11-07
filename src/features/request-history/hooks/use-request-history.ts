@@ -39,10 +39,7 @@ export function useRequestHistory() {
     [commit],
   )
 
-  const remove = useCallback(
-    (id: string) => commit((current) => current.filter((entry) => entry.id !== id)),
-    [commit],
-  )
+  const remove = useCallback((id: string) => commit((current) => current.filter((entry) => entry.id !== id)), [commit])
 
   const clear = useCallback(() => commit(() => []), [commit])
 

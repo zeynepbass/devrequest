@@ -26,7 +26,10 @@ describe('App', () => {
 
     expect(await screen.findByTestId('response-status')).toHaveTextContent('200OK')
     expect(screen.getByTestId('response-size')).toHaveTextContent('24 B')
-    expect(fetchMock).toHaveBeenCalledWith('https://api.example.com/posts/1', expect.objectContaining({ method: 'GET' }))
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://api.example.com/posts/1',
+      expect.objectContaining({ method: 'GET' }),
+    )
 
     await user.click(screen.getByRole('tab', { name: 'Raw' }))
     expect(screen.getByTestId('response-raw')).toHaveTextContent('{"id":1,"title":"Hello"}')

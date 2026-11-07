@@ -71,7 +71,8 @@ describe('executeRequest', () => {
     expect(empty.ok && empty.response.bodyKind).toBe('empty')
 
     const binary = await executeRequest(request, {
-      fetchImpl: async () => new Response(new Uint8Array([137, 80, 78, 71]), { headers: { 'content-type': 'image/png' } }),
+      fetchImpl: async () =>
+        new Response(new Uint8Array([137, 80, 78, 71]), { headers: { 'content-type': 'image/png' } }),
     })
     expect(binary.ok && binary.response.bodyKind).toBe('binary')
     expect(binary.ok && binary.response.sizeBytes).toBe(4)

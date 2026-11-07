@@ -37,7 +37,7 @@ export function ResponseBody({ response, view, prettyText }: ResponseBodyProps) 
         data-testid="response-raw"
         tabIndex={0}
         aria-label="Raw response body"
-        className="min-h-0 flex-1 overflow-auto p-4 font-mono text-[13px] leading-relaxed whitespace-pre-wrap break-all outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-inset"
+        className="min-h-0 flex-1 overflow-auto p-4 font-mono text-[13px] leading-relaxed break-all whitespace-pre-wrap outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-inset"
       >
         {response.bodyText}
       </pre>

@@ -1,7 +1,8 @@
 import { AuthPanel } from '@/features/authorization/components/auth-panel'
+import { useMemo } from 'react'
 import { KeyValueEditor } from '@/components/shared/key-value-editor'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import type { KeyValueEntry, RequestDraft } from '@/types/http'
+import type { EntryPatch, KeyValueCollection, KeyValueEntry, RequestDraft } from '@/types/http'
 import { COMMON_HEADERS } from '../constants'
 import type { RequestDraftActions } from '../hooks/use-request-draft'
 import { BodyEditor } from './body-editor'
@@ -29,7 +30,21 @@ function TabCount({ value }: { value: number }) {
 const triggerClass =
   'h-9 flex-none rounded-none border-0 px-3 text-[13px] data-[state=active]:bg-transparent dark:data-[state=active]:bg-transparent dark:data-[state=active]:border-transparent after:bg-primary'
 
+function useCollectionHandlers(actions: RequestDraftActions, collection: KeyValueCollection) {
+  return useMemo(
+    () => ({
+      onAdd: () => actions.addEntry(collection),
+      onChange: (id: string, patch: EntryPatch) => actions.updateEntry(collection, id, patch),
+      onRemove: (id: string) => actions.removeEntry(collection, id),
+    }),
+    [actions, collection],
+  )
+}
+
 export function RequestTabs({ draft, actions }: RequestTabsProps) {
+  const paramHandlers = useCollectionHandlers(actions, 'params')
+  const headerHandlers = useCollectionHandlers(actions, 'headers')
+
   return (
     <Tabs defaultValue="params" className="min-h-0 flex-1 gap-0">
       <TabsList variant="line" className="h-10 w-full justify-start overflow-x-auto border-b px-2 sm:px-3">
@@ -56,9 +71,7 @@ export function RequestTabs({ draft, actions }: RequestTabsProps) {
             keyPlaceholder="parameter"
             valuePlaceholder="value"
             addLabel="Add parameter"
-            onAdd={() => actions.addEntry('params')}
-            onChange={(id, patch) => actions.updateEntry('params', id, patch)}
-            onRemove={(id) => actions.removeEntry('params', id)}
+            {...paramHandlers}
           />
         </TabsContent>
         <TabsContent value="headers">
@@ -69,9 +82,7 @@ export function RequestTabs({ draft, actions }: RequestTabsProps) {
             valuePlaceholder="value"
             addLabel="Add header"
             keySuggestions={COMMON_HEADERS}
-            onAdd={() => actions.addEntry('headers')}
-            onChange={(id, patch) => actions.updateEntry('headers', id, patch)}
-            onRemove={(id) => actions.removeEntry('headers', id)}
+            {...headerHandlers}
           />
         </TabsContent>
         <TabsContent value="body" className="flex min-h-full flex-col">

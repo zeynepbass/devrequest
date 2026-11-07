@@ -19,7 +19,8 @@ if (!window.matchMedia) {
 }
 
 if (!Range.prototype.getClientRects) {
-  Range.prototype.getClientRects = () => ({ length: 0, item: () => null, [Symbol.iterator]: [][Symbol.iterator] }) as unknown as DOMRectList
+  Range.prototype.getClientRects = () =>
+    ({ length: 0, item: () => null, [Symbol.iterator]: [][Symbol.iterator] }) as unknown as DOMRectList
   Range.prototype.getBoundingClientRect = () => new DOMRect()
 }
 

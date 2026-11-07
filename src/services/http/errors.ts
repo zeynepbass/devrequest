@@ -7,7 +7,7 @@ const DEFAULT_COPY: Record<RequestErrorKind, Pick<RequestError, 'title' | 'hints
   },
   'invalid-header': {
     title: 'Invalid header',
-    hints: ['Header names may only contain letters, digits and !#$%&\'*+-.^_`|~ characters.'],
+    hints: ["Header names may only contain letters, digits and !#$%&'*+-.^_`|~ characters."],
   },
   'invalid-auth': {
     title: 'Incomplete authorization',

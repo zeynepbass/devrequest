@@ -23,7 +23,12 @@ export function ClearHistoryDialog({ count, onConfirm }: ClearHistoryDialogProps
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="xs" disabled={count === 0} className="text-muted-foreground hover:text-destructive">
+        <Button
+          variant="ghost"
+          size="xs"
+          disabled={count === 0}
+          className="text-muted-foreground hover:text-destructive"
+        >
           <Trash2Icon />
           Clear
         </Button>
@@ -32,8 +37,8 @@ export function ClearHistoryDialog({ count, onConfirm }: ClearHistoryDialogProps
         <DialogHeader>
           <DialogTitle>Clear request history?</DialogTitle>
           <DialogDescription>
-            {count === 1 ? 'One saved request' : `${count} saved requests`} will be removed from this browser. This cannot
-            be undone.
+            {count === 1 ? 'One saved request' : `${count} saved requests`} will be removed from this browser. This
+            cannot be undone.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

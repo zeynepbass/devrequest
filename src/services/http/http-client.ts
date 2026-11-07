@@ -83,7 +83,9 @@ export async function executeRequest(
     if (timedOut) {
       return {
         ok: false,
-        error: createRequestError('timeout', `No response after ${Math.round(timeoutMs / 1000)} seconds.`, { durationMs }),
+        error: createRequestError('timeout', `No response after ${Math.round(timeoutMs / 1000)} seconds.`, {
+          durationMs,
+        }),
       }
     }
     if (isAbortError(error) || controller.signal.aborted) {

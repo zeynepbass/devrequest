@@ -12,7 +12,11 @@ export function ResponseLoading({ startedAt, onCancel }: ResponseLoadingProps) {
   const elapsed = useElapsedTime(startedAt)
 
   return (
-    <div role="status" aria-live="polite" className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
+    <div
+      role="status"
+      aria-live="polite"
+      className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center"
+    >
       <div className="relative size-12">
         <span className="absolute inset-0 rounded-full border-2 border-border" />
         <span className="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-primary" />

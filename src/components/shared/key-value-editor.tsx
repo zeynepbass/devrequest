@@ -1,9 +1,81 @@
 import { PlusIcon, Trash2Icon } from 'lucide-react'
-import { useId } from 'react'
+import { memo, useId } from 'react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { cn } from '@/lib/utils'
-import type { KeyValueEntry } from '@/types/http'
+import type { EntryPatch, KeyValueEntry } from '@/types/http'
+
+interface KeyValueRowProps {
+  entry: KeyValueEntry
+  index: number
+  keyPlaceholder: string
+  valuePlaceholder: string
+  suggestionsId?: string
+  onChange: (id: string, patch: EntryPatch) => void
+  onRemove: (id: string) => void
+}
+
+const KeyValueRow = memo(function KeyValueRow({
+  entry,
+  index,
+  keyPlaceholder,
+  valuePlaceholder,
+  suggestionsId,
+  onChange,
+  onRemove,
+}: KeyValueRowProps) {
+  return (
+    <div
+      role="row"
+      className={cn(
+        'group grid grid-cols-[2.25rem_minmax(0,1fr)_minmax(0,1.4fr)_2.5rem] items-center border-b px-0.5 py-0.5 last:border-b-0',
+        !entry.enabled && 'text-muted-foreground',
+      )}
+    >
+      <span role="cell" className="flex justify-center">
+        <Checkbox
+          checked={entry.enabled}
+          aria-label={`Enable ${entry.key || `row ${index + 1}`}`}
+          onCheckedChange={(checked) => onChange(entry.id, { enabled: checked === true })}
+        />
+      </span>
+      <span role="cell" className="min-w-0">
+        <input
+          value={entry.key}
+          placeholder={keyPlaceholder}
+          aria-label={`Key for row ${index + 1}`}
+          list={suggestionsId}
+          spellCheck={false}
+          autoComplete="off"
+          className={cn(inputClass, !entry.enabled && 'line-through decoration-muted-foreground/50')}
+          onChange={(event) => onChange(entry.id, { key: event.target.value })}
+        />
+      </span>
+      <span role="cell" className="min-w-0">
+        <input
+          value={entry.value}
+          placeholder={valuePlaceholder}
+          aria-label={`Value for row ${index + 1}`}
+          spellCheck={false}
+          autoComplete="off"
+          className={inputClass}
+          onChange={(event) => onChange(entry.id, { value: event.target.value })}
+        />
+      </span>
+      <span role="cell" className="flex justify-center">
+        <Button
+          variant="ghost"
+          size="icon-xs"
+          aria-label={`Remove ${entry.key || `row ${index + 1}`}`}
+          className="text-muted-foreground opacity-60 group-hover:opacity-100 hover:text-destructive focus-visible:opacity-100"
+          onClick={() => onRemove(entry.id)}
+        >
+          <Trash2Icon />
+        </Button>
+      </span>
+    </div>
+  )
+})
 
 export interface KeyValueEditorProps {
   label: string
@@ -13,7 +85,7 @@ export interface KeyValueEditorProps {
   addLabel: string
   keySuggestions?: readonly string[]
   onAdd: () => void
-  onChange: (id: string, patch: Partial<Pick<KeyValueEntry, 'key' | 'value' | 'enabled'>>) => void
+  onChange: (id: string, patch: EntryPatch) => void
   onRemove: (id: string) => void
 }
 
@@ -60,60 +132,25 @@ export function KeyValueEditor({
           </div>
         ) : (
           entries.map((entry, index) => (
-            <div
+            <KeyValueRow
               key={entry.id}
-              role="row"
-              className={cn(
-                'group grid grid-cols-[2.25rem_minmax(0,1fr)_minmax(0,1.4fr)_2.5rem] items-center border-b px-0.5 py-0.5 last:border-b-0',
-                !entry.enabled && 'text-muted-foreground',
-              )}
-            >
-              <span role="cell" className="flex justify-center">
-                <Checkbox
-                  checked={entry.enabled}
-                  aria-label={`Enable ${entry.key || `row ${index + 1}`}`}
-                  onCheckedChange={(checked) => onChange(entry.id, { enabled: checked === true })}
-                />
-              </span>
-              <span role="cell" className="min-w-0">
-                <input
-                  value={entry.key}
-                  placeholder={keyPlaceholder}
-                  aria-label={`Key for row ${index + 1}`}
-                  list={keySuggestions ? suggestionsId : undefined}
-                  spellCheck={false}
-                  autoComplete="off"
-                  className={cn(inputClass, !entry.enabled && 'line-through decoration-muted-foreground/50')}
-                  onChange={(event) => onChange(entry.id, { key: event.target.value })}
-                />
-              </span>
-              <span role="cell" className="min-w-0">
-                <input
-                  value={entry.value}
-                  placeholder={valuePlaceholder}
-                  aria-label={`Value for row ${index + 1}`}
-                  spellCheck={false}
-                  autoComplete="off"
-                  className={inputClass}
-                  onChange={(event) => onChange(entry.id, { value: event.target.value })}
-                />
-              </span>
-              <span role="cell" className="flex justify-center">
-                <Button
-                  variant="ghost"
-                  size="icon-xs"
-                  aria-label={`Remove ${entry.key || `row ${index + 1}`}`}
-                  className="text-muted-foreground opacity-60 group-hover:opacity-100 hover:text-destructive focus-visible:opacity-100"
-                  onClick={() => onRemove(entry.id)}
-                >
-                  <Trash2Icon />
-                </Button>
-              </span>
-            </div>
+              entry={entry}
+              index={index}
+              keyPlaceholder={keyPlaceholder}
+              valuePlaceholder={valuePlaceholder}
+              suggestionsId={keySuggestions ? suggestionsId : undefined}
+              onChange={onChange}
+              onRemove={onRemove}
+            />
           ))
         )}
       </div>
-      <Button variant="ghost" size="sm" className="self-start text-muted-foreground hover:text-foreground" onClick={onAdd}>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="self-start text-muted-foreground hover:text-foreground"
+        onClick={onAdd}
+      >
         <PlusIcon />
         {addLabel}
       </Button>

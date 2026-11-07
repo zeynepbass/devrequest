@@ -27,9 +27,7 @@ const SENSITIVE_PARAMS = new Set([
 ])
 
 function redact(entries: KeyValueEntry[], sensitive: ReadonlySet<string>): KeyValueEntry[] {
-  return entries.map((entry) =>
-    sensitive.has(entry.key.trim().toLowerCase()) ? { ...entry, value: '' } : entry,
-  )
+  return entries.map((entry) => (sensitive.has(entry.key.trim().toLowerCase()) ? { ...entry, value: '' } : entry))
 }
 
 function stripUrlCredentials(url: string): string {

@@ -41,7 +41,9 @@ export function useRequestExecution({ timeoutMs }: UseRequestExecutionOptions = 
 
       if (controllerRef.current === controller) {
         controllerRef.current = null
-        setState(outcome.ok ? { status: 'success', response: outcome.response } : { status: 'error', error: outcome.error })
+        setState(
+          outcome.ok ? { status: 'success', response: outcome.response } : { status: 'error', error: outcome.error },
+        )
       }
 
       return { duplicate: false, outcome }

@@ -10,4 +10,17 @@ export default defineConfig({
       '@': path.resolve(import.meta.dirname, './src'),
     },
   },
+  build: {
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [
+            { name: 'react', test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/ },
+            { name: 'ui', test: /node_modules[\\/](radix-ui|@radix-ui|@floating-ui|sonner|lucide-react)[\\/]/ },
+            { name: 'codemirror', test: /node_modules[\\/](@codemirror|@lezer|style-mod|w3c-keyname|crelt)[\\/]/ },
+          ],
+        },
+      },
+    },
+  },
 })

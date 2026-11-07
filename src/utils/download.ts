@@ -19,7 +19,11 @@ function getLastPathSegment(url: string): string {
 export function createDownloadName(url: string, kind: string): string {
   const extension = EXTENSION_BY_KIND[kind] ?? 'txt'
   const segment = getLastPathSegment(url)
-  const base = segment.replace(/\.[a-z\d]+$/i, '').replace(/[^\w.-]+/g, '-').slice(0, 60) || 'response'
+  const base =
+    segment
+      .replace(/\.[a-z\d]+$/i, '')
+      .replace(/[^\w.-]+/g, '-')
+      .slice(0, 60) || 'response'
   return `${base}.${extension}`
 }
 

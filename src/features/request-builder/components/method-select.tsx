@@ -33,7 +33,11 @@ export function MethodSelect({ value, onChange }: MethodSelectProps) {
       </SelectTrigger>
       <SelectContent position="popper" align="start" className="min-w-[8rem]">
         {HTTP_METHODS.map((method) => (
-          <SelectItem key={method} value={method} className={cn('font-mono text-[13px] font-semibold', METHOD_TEXT_CLASS[method])}>
+          <SelectItem
+            key={method}
+            value={method}
+            className={cn('font-mono text-[13px] font-semibold', METHOD_TEXT_CLASS[method])}
+          >
             {method}
           </SelectItem>
         ))}

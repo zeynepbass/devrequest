@@ -9,14 +9,7 @@ interface IconButtonProps extends Omit<ComponentProps<typeof Button>, 'children'
   icon: ReactNode
 }
 
-export function IconButton({
-  label,
-  shortcut,
-  icon,
-  variant = 'ghost',
-  size = 'icon-sm',
-  ...props
-}: IconButtonProps) {
+export function IconButton({ label, shortcut, icon, variant = 'ghost', size = 'icon-sm', ...props }: IconButtonProps) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>

@@ -1,6 +1,5 @@
 export type JsonValidation =
-  | { valid: true; empty: boolean }
-  | { valid: false; message: string; line?: number; column?: number }
+  { valid: true; empty: boolean } | { valid: false; message: string; line?: number; column?: number }
 
 function locate(text: string, position: number): { line: number; column: number } {
   const before = text.slice(0, position)

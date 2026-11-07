@@ -44,7 +44,7 @@ export function RequestBar({
           spellCheck={false}
           autoComplete="off"
           autoCapitalize="off"
-          className="h-10 min-w-0 flex-1 rounded-r-md border border-input bg-surface-sunken px-3 font-mono text-[13px] outline-none transition-[color,box-shadow,border-color] placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/30 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
+          className="h-10 min-w-0 flex-1 rounded-r-md border border-input bg-surface-sunken px-3 font-mono text-[13px] transition-[color,box-shadow,border-color] outline-none placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/30 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
           onChange={(event) => onUrlChange(event.target.value)}
         />
       </div>

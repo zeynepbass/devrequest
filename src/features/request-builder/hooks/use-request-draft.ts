@@ -1,8 +1,8 @@
 import { useMemo, useReducer } from 'react'
 import type { AuthConfig } from '@/types/auth'
-import type { BodyMode, HttpMethod, KeyValueCollection, RequestDraft } from '@/types/http'
+import type { BodyMode, EntryPatch, HttpMethod, KeyValueCollection, RequestDraft } from '@/types/http'
 import { createEmptyDraft } from '../model/request-draft'
-import { requestReducer, type EntryPatch } from '../model/request-reducer'
+import { requestReducer } from '../model/request-reducer'
 
 export interface RequestDraftActions {
   setMethod: (method: HttpMethod) => void

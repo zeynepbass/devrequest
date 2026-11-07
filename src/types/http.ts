@@ -11,6 +11,8 @@ export interface KeyValueEntry {
   enabled: boolean
 }
 
+export type EntryPatch = Partial<Pick<KeyValueEntry, 'key' | 'value' | 'enabled'>>
+
 export type KeyValueCollection = 'headers' | 'params'
 
 export const BODY_MODES = ['none', 'json', 'text'] as const

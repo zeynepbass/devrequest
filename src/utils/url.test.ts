@@ -28,7 +28,9 @@ describe('extractQueryParams', () => {
 
 describe('applyQueryParams', () => {
   it('replaces the query string and keeps the hash', () => {
-    expect(applyQueryParams('https://a.dev/p?old=1#frag', [{ key: 'page', value: '2' }])).toBe('https://a.dev/p?page=2#frag')
+    expect(applyQueryParams('https://a.dev/p?old=1#frag', [{ key: 'page', value: '2' }])).toBe(
+      'https://a.dev/p?page=2#frag',
+    )
   })
 
   it('encodes special characters and skips blank keys', () => {

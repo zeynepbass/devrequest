@@ -29,7 +29,10 @@ export function ResponseMeta({ response }: ResponseMetaProps) {
       {response.redirected ? (
         <Tooltip>
           <TooltipTrigger asChild>
-            <span tabIndex={0} className="inline-flex items-center gap-1 rounded text-xs text-status-redirect outline-none focus-visible:ring-2 focus-visible:ring-ring/50">
+            <span
+              tabIndex={0}
+              className="inline-flex items-center gap-1 rounded text-xs text-status-redirect outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+            >
               <Repeat2Icon className="size-3.5" aria-hidden="true" />
               Redirected
             </span>

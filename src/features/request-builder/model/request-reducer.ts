@@ -1,15 +1,7 @@
 import type { AuthConfig } from '@/types/auth'
-import type {
-  BodyMode,
-  HttpMethod,
-  KeyValueCollection,
-  KeyValueEntry,
-  RequestDraft,
-} from '@/types/http'
+import type { BodyMode, EntryPatch, HttpMethod, KeyValueCollection, KeyValueEntry, RequestDraft } from '@/types/http'
 import { applyQueryParams, extractQueryParams } from '@/utils/url'
 import { createEmptyDraft, createEntry } from './request-draft'
-
-export type EntryPatch = Partial<Pick<KeyValueEntry, 'key' | 'value' | 'enabled'>>
 
 export type RequestAction =
   | { type: 'set-method'; method: HttpMethod }
@@ -43,11 +35,7 @@ function syncUrlFromParams(url: string, params: KeyValueEntry[]): string {
   )
 }
 
-function updateCollection(
-  state: RequestDraft,
-  collection: KeyValueCollection,
-  entries: KeyValueEntry[],
-): RequestDraft {
+function updateCollection(state: RequestDraft, collection: KeyValueCollection, entries: KeyValueEntry[]): RequestDraft {
   if (collection === 'headers') {
     return { ...state, headers: entries }
   }
@@ -70,9 +58,7 @@ export function requestReducer(state: RequestDraft, action: RequestAction): Requ
       return updateCollection(
         state,
         action.collection,
-        state[action.collection].map((entry) =>
-          entry.id === action.id ? { ...entry, ...action.patch } : entry,
-        ),
+        state[action.collection].map((entry) => (entry.id === action.id ? { ...entry, ...action.patch } : entry)),
       )
     case 'remove-entry':
       return updateCollection(

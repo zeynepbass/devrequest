@@ -17,7 +17,12 @@ export function SendButton({ loading, onCancel }: SendButtonProps) {
   }
 
   return (
-    <Button key="send" type="submit" aria-keyshortcuts="Meta+Enter Control+Enter" className="h-10 min-w-28 gap-2 font-semibold">
+    <Button
+      key="send"
+      type="submit"
+      aria-keyshortcuts="Meta+Enter Control+Enter"
+      className="h-10 min-w-28 gap-2 font-semibold"
+    >
       Send
       <SendHorizontalIcon />
     </Button>
