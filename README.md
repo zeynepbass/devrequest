@@ -21,6 +21,7 @@ Geliştiriciler için React ve TypeScript ile geliştirilmiş, gerçek HTTP iste
 - [CORS kısıtlamaları](#cors-kısıtlamaları)
 - [Bilinen sınırlamalar](#bilinen-sınırlamalar)
 - [Gelecekte geliştirilebilecek özellikler](#gelecekte-geliştirilebilecek-özellikler)
+- [Geliştirme süreci](#geliştirme-süreci)
 
 ## Proje hakkında
 
@@ -323,6 +324,10 @@ CORS'a izin veren API'leri test etmek için örnek olarak [JSONPlaceholder](http
 - Yanıt üzerinde arama ve JSONPath filtreleme
 - Çoklu sekme ile aynı anda birden fazla istek üzerinde çalışma
 - Türkçe arayüz desteği (i18n)
+
+## Geliştirme süreci
+
+DevRequest, [Claude Code](https://claude.com/claude-code) ile birlikte geliştirildi. Mimari kararlar, arayüz tasarımı, testler ve dokümantasyon ortak bir çalışmanın ürünüdür; proje yapay zekâ destekli geliştirmenin gerçek bir uygulaması olarak paylaşılmaktadır.
 
 ## Lisans
 
