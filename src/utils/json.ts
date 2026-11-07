@@ -8,6 +8,132 @@ function locate(text: string, position: number): { line: number; column: number 
   return { line: lines.length, column: (lines.at(-1)?.length ?? 0) + 1 }
 }
 
+const WHITESPACE = new Set([' ', '\t', '\n', '\r'])
+
+function findErrorPosition(text: string): number {
+  let index = 0
+
+  function skipWhitespace() {
+    while (index < text.length && WHITESPACE.has(text.charAt(index))) index += 1
+  }
+
+  function fail(): never {
+    throw index
+  }
+
+  function expectLiteral(literal: string) {
+    for (const char of literal) {
+      if (text.charAt(index) !== char) fail()
+      index += 1
+    }
+  }
+
+  function parseString() {
+    index += 1
+    while (index < text.length) {
+      const char = text.charAt(index)
+      if (char === '"') {
+        index += 1
+        return
+      }
+      if (char === '\\') {
+        const next = text.charAt(index + 1)
+        if (next === 'u') {
+          if (!/^[\da-f]{4}$/i.test(text.slice(index + 2, index + 6))) {
+            index += 2
+            fail()
+          }
+          index += 6
+          continue
+        }
+        if (!'"\\/bfnrt'.includes(next) || next === '') {
+          index += 1
+          fail()
+        }
+        index += 2
+        continue
+      }
+      if (char < ' ') fail()
+      index += 1
+    }
+    fail()
+  }
+
+  function parseNumber() {
+    const match = /^-?(0|[1-9]\d*)(\.\d+)?([eE][+-]?\d+)?/.exec(text.slice(index))
+    if (!match || match[0] === '-') fail()
+    index += match[0].length
+  }
+
+  function parseValue() {
+    skipWhitespace()
+    const char = text.charAt(index)
+    if (char === '{') return parseObject()
+    if (char === '[') return parseArray()
+    if (char === '"') return parseString()
+    if (char === 't') return expectLiteral('true')
+    if (char === 'f') return expectLiteral('false')
+    if (char === 'n') return expectLiteral('null')
+    if (char === '-' || (char >= '0' && char <= '9')) return parseNumber()
+    fail()
+  }
+
+  function parseObject() {
+    index += 1
+    skipWhitespace()
+    if (text.charAt(index) === '}') {
+      index += 1
+      return
+    }
+    for (;;) {
+      skipWhitespace()
+      if (text.charAt(index) !== '"') fail()
+      parseString()
+      skipWhitespace()
+      if (text.charAt(index) !== ':') fail()
+      index += 1
+      parseValue()
+      skipWhitespace()
+      const char = text.charAt(index)
+      if (char === '}') {
+        index += 1
+        return
+      }
+      if (char !== ',') fail()
+      index += 1
+    }
+  }
+
+  function parseArray() {
+    index += 1
+    skipWhitespace()
+    if (text.charAt(index) === ']') {
+      index += 1
+      return
+    }
+    for (;;) {
+      parseValue()
+      skipWhitespace()
+      const char = text.charAt(index)
+      if (char === ']') {
+        index += 1
+        return
+      }
+      if (char !== ',') fail()
+      index += 1
+    }
+  }
+
+  try {
+    parseValue()
+    skipWhitespace()
+    if (index < text.length) fail()
+    return -1
+  } catch (position) {
+    return typeof position === 'number' ? position : -1
+  }
+}
+
 function cleanMessage(message: string): string {
   return message
     .replace(/^JSON\.parse: /, '')
@@ -26,18 +152,8 @@ export function validateJson(text: string): JsonValidation {
     return { valid: true, empty: false }
   } catch (error) {
     const raw = error instanceof Error ? error.message : 'Invalid JSON'
-    const lineColumn = /line (\d+) column (\d+)/.exec(raw)
-    const position = /position (\d+)/.exec(raw)
-
-    let location: { line: number; column: number } | undefined
-    if (lineColumn?.[1] && lineColumn[2]) {
-      location = { line: Number(lineColumn[1]), column: Number(lineColumn[2]) }
-    } else if (position?.[1]) {
-      location = locate(text, Number(position[1]))
-    } else if (/end of (JSON )?(data|input)/i.test(raw)) {
-      location = locate(text, text.length)
-    }
-
+    const position = findErrorPosition(text)
+    const location = position >= 0 ? locate(text, position) : undefined
     return { valid: false, message: cleanMessage(raw) || 'Invalid JSON', ...location }
   }
 }
