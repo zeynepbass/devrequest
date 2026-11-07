@@ -9,15 +9,13 @@ import { tryFormatJson } from '@/utils/json'
 import { ResponseBody } from './response-body'
 import { ResponseHeadersTable } from './response-headers-table'
 import { ResponseMeta } from './response-meta'
+import { PANEL_TAB_TRIGGER_CLASS } from '@/lib/tab-styles'
 
 type ResponseTab = 'pretty' | 'raw' | 'headers'
 
 interface ResponseViewProps {
   response: HttpResponse
 }
-
-const triggerClass =
-  'h-9 flex-none rounded-none border-0 px-3 text-[13px] data-[state=active]:bg-transparent dark:data-[state=active]:bg-transparent dark:data-[state=active]:border-transparent after:bg-primary'
 
 function isResponseTab(value: string): value is ResponseTab {
   return value === 'pretty' || value === 'raw' || value === 'headers'
@@ -67,13 +65,13 @@ export function ResponseView({ response }: ResponseViewProps) {
         </div>
       </div>
       <TabsList variant="line" className="h-10 w-full justify-start border-b px-2 sm:px-3">
-        <TabsTrigger value="pretty" className={triggerClass}>
+        <TabsTrigger value="pretty" className={PANEL_TAB_TRIGGER_CLASS}>
           Pretty
         </TabsTrigger>
-        <TabsTrigger value="raw" className={triggerClass}>
+        <TabsTrigger value="raw" className={PANEL_TAB_TRIGGER_CLASS}>
           Raw
         </TabsTrigger>
-        <TabsTrigger value="headers" className={triggerClass}>
+        <TabsTrigger value="headers" className={PANEL_TAB_TRIGGER_CLASS}>
           Headers
           <span className="rounded-sm bg-muted px-1 font-mono text-[10px] leading-4 text-muted-foreground tabular-nums">
             {response.headers.length}

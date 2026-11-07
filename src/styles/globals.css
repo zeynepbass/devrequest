@@ -17,7 +17,7 @@
   --card-foreground: oklch(0.22 0.008 250);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.22 0.008 250);
-  --primary: oklch(0.58 0.105 185);
+  --primary: oklch(0.46 0.09 185);
   --primary-foreground: oklch(0.99 0.005 185);
   --secondary: oklch(0.955 0.004 250);
   --secondary-foreground: oklch(0.28 0.01 250);
@@ -28,26 +28,26 @@
   --destructive: oklch(0.58 0.2 25);
   --border: oklch(0.905 0.005 250);
   --input: oklch(0.885 0.006 250);
-  --ring: oklch(0.58 0.105 185);
+  --ring: oklch(0.46 0.09 185);
 
-  --method-get: oklch(0.56 0.14 150);
-  --method-post: oklch(0.6 0.14 70);
-  --method-put: oklch(0.54 0.14 250);
-  --method-patch: oklch(0.54 0.16 300);
-  --method-delete: oklch(0.56 0.19 25);
+  --method-get: oklch(0.48 0.13 150);
+  --method-post: oklch(0.5 0.12 65);
+  --method-put: oklch(0.48 0.15 255);
+  --method-patch: oklch(0.48 0.17 300);
+  --method-delete: oklch(0.5 0.19 25);
 
-  --status-success: oklch(0.55 0.14 150);
-  --status-redirect: oklch(0.54 0.13 250);
-  --status-client: oklch(0.6 0.14 70);
-  --status-server: oklch(0.56 0.19 25);
+  --status-success: oklch(0.47 0.13 150);
+  --status-redirect: oklch(0.48 0.14 255);
+  --status-client: oklch(0.5 0.12 65);
+  --status-server: oklch(0.5 0.19 25);
 
   --syntax-key: oklch(0.5 0.14 250);
   --syntax-string: oklch(0.5 0.13 150);
   --syntax-number: oklch(0.56 0.15 50);
   --syntax-keyword: oklch(0.52 0.17 320);
   --syntax-punctuation: oklch(0.55 0.01 250);
-  --editor-selection: oklch(0.58 0.105 185 / 0.18);
-  --editor-gutter: oklch(0.62 0.01 250);
+  --editor-selection: oklch(0.5 0.095 185 / 0.18);
+  --editor-gutter: oklch(0.52 0.01 250);
 }
 
 .dark {
@@ -90,7 +90,7 @@
   --syntax-keyword: oklch(0.76 0.13 320);
   --syntax-punctuation: oklch(0.62 0.01 250);
   --editor-selection: oklch(0.8 0.115 182 / 0.2);
-  --editor-gutter: oklch(0.48 0.01 250);
+  --editor-gutter: oklch(0.62 0.01 250);
 }
 
 @theme inline {

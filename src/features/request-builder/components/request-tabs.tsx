@@ -6,6 +6,7 @@ import type { EntryPatch, KeyValueCollection, KeyValueEntry, RequestDraft } from
 import { COMMON_HEADERS } from '../constants'
 import type { RequestDraftActions } from '../hooks/use-request-draft'
 import { BodyEditor } from './body-editor'
+import { PANEL_TAB_TRIGGER_CLASS } from '@/lib/tab-styles'
 
 interface RequestTabsProps {
   draft: RequestDraft
@@ -27,9 +28,6 @@ function TabCount({ value }: { value: number }) {
   )
 }
 
-const triggerClass =
-  'h-9 flex-none rounded-none border-0 px-3 text-[13px] data-[state=active]:bg-transparent dark:data-[state=active]:bg-transparent dark:data-[state=active]:border-transparent after:bg-primary'
-
 function useCollectionHandlers(actions: RequestDraftActions, collection: KeyValueCollection) {
   return useMemo(
     () => ({
@@ -48,17 +46,17 @@ export function RequestTabs({ draft, actions }: RequestTabsProps) {
   return (
     <Tabs defaultValue="params" className="min-h-0 flex-1 gap-0">
       <TabsList variant="line" className="h-10 w-full justify-start overflow-x-auto border-b px-2 sm:px-3">
-        <TabsTrigger value="params" className={triggerClass}>
+        <TabsTrigger value="params" className={PANEL_TAB_TRIGGER_CLASS}>
           Query Params <TabCount value={countActive(draft.params)} />
         </TabsTrigger>
-        <TabsTrigger value="headers" className={triggerClass}>
+        <TabsTrigger value="headers" className={PANEL_TAB_TRIGGER_CLASS}>
           Headers <TabCount value={countActive(draft.headers)} />
         </TabsTrigger>
-        <TabsTrigger value="body" className={triggerClass}>
+        <TabsTrigger value="body" className={PANEL_TAB_TRIGGER_CLASS}>
           Body
           {draft.body.mode !== 'none' ? <span aria-hidden="true" className="size-1.5 rounded-full bg-primary" /> : null}
         </TabsTrigger>
-        <TabsTrigger value="auth" className={triggerClass}>
+        <TabsTrigger value="auth" className={PANEL_TAB_TRIGGER_CLASS}>
           Authorization
           {draft.auth.type !== 'none' ? <span aria-hidden="true" className="size-1.5 rounded-full bg-primary" /> : null}
         </TabsTrigger>

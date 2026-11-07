@@ -19,6 +19,7 @@ export function AppShell({ header, sidebar, children }: AppShellProps) {
       <div className="flex min-h-0 flex-1">
         {sidebar}
         <main id="main" tabIndex={-1} className="flex min-w-0 flex-1 flex-col outline-none">
+          <h1 className="sr-only">DevRequest API client</h1>
           {children}
         </main>
       </div>
