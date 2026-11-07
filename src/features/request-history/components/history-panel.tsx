@@ -1,6 +1,7 @@
-import { HistoryIcon, SearchIcon, SearchXIcon } from 'lucide-react'
+import { HistoryIcon, SearchIcon, SearchXIcon, XIcon } from 'lucide-react'
 import { useDeferredValue, useMemo, useState } from 'react'
 import { EmptyState } from '@/components/shared/empty-state'
+import { IconButton } from '@/components/shared/icon-button'
 import type { HistoryEntry } from '../lib/history-schema'
 import { ClearHistoryDialog } from './clear-history-dialog'
 import { HistoryItem } from './history-item'
@@ -10,9 +11,10 @@ interface HistoryPanelProps {
   onOpen: (entry: HistoryEntry) => void
   onRemove: (id: string) => void
   onClear: () => void
+  onClose?: () => void
 }
 
-export function HistoryPanel({ entries, onOpen, onRemove, onClear }: HistoryPanelProps) {
+export function HistoryPanel({ entries, onOpen, onRemove, onClear, onClose }: HistoryPanelProps) {
   const [query, setQuery] = useState('')
   const deferredQuery = useDeferredValue(query)
 
@@ -33,8 +35,9 @@ export function HistoryPanel({ entries, onOpen, onRemove, onClear }: HistoryPane
         <span className="rounded-sm bg-muted px-1.5 font-mono text-[10px] leading-4 text-muted-foreground tabular-nums">
           {entries.length}
         </span>
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-1">
           <ClearHistoryDialog count={entries.length} onConfirm={onClear} />
+          {onClose ? <IconButton label="Close history" icon={<XIcon />} size="icon-xs" onClick={onClose} /> : null}
         </div>
       </div>
       {entries.length > 0 ? (

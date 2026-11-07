@@ -53,10 +53,12 @@ export const HistoryItem = memo(function HistoryItem({ entry, onOpen, onRemove }
               {entry.result.status}
             </span>
           ) : (
-            <span className="font-medium text-destructive">{entry.result.errorTitle}</span>
+            <span className="font-medium whitespace-nowrap text-destructive">{entry.result.errorTitle}</span>
           )}
-          {entry.result.ok ? <span className="font-mono">{formatDuration(entry.result.durationMs)}</span> : null}
-          {secondary ? <span className="truncate">{secondary}</span> : null}
+          {entry.result.ok ? (
+            <span className="font-mono whitespace-nowrap">{formatDuration(entry.result.durationMs)}</span>
+          ) : null}
+          {secondary ? <span className="min-w-0 truncate">{secondary}</span> : null}
           <time dateTime={time.toISOString()} title={time.toLocaleString()} className="ml-auto shrink-0">
             {formatRelativeTime(entry.savedAt)}
           </time>

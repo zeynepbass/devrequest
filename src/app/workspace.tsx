@@ -1,11 +1,13 @@
-import { FilePlus2Icon, HistoryIcon } from 'lucide-react'
-import { useCallback, useState } from 'react'
+import { FilePlus2Icon, HistoryIcon, KeyboardIcon } from 'lucide-react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { AppHeader } from '@/components/layout/app-header'
 import { AppShell } from '@/components/layout/app-shell'
 import { HistorySidebar } from '@/components/layout/history-sidebar'
+import { ShortcutsDialog } from '@/components/layout/shortcuts-dialog'
 import { WorkspaceLayout } from '@/components/layout/workspace-layout'
 import { IconButton } from '@/components/shared/icon-button'
+import { ExampleRequests } from '@/features/request-builder/components/example-requests'
 import { RequestBar } from '@/features/request-builder/components/request-bar'
 import { RequestTabs } from '@/features/request-builder/components/request-tabs'
 import { SendButton } from '@/features/request-builder/components/send-button'
@@ -15,8 +17,12 @@ import { useRequestHistory } from '@/features/request-history/hooks/use-request-
 import type { HistoryEntry } from '@/features/request-history/lib/history-schema'
 import { restoreRequest } from '@/features/request-history/lib/sanitize'
 import { ResponsePanel } from '@/features/response-viewer/components/response-panel'
+import { useHotkeys, type Hotkey } from '@/hooks/use-hotkeys'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { useRequestExecution } from '@/hooks/use-request-execution'
+import { useTheme } from '@/hooks/use-theme'
+import { getShortcutKeys } from '@/lib/shortcuts'
+import type { RequestDraft } from '@/types/http'
 import type { RequestErrorKind } from '@/types/response'
 
 const RECORDED_ERRORS: ReadonlySet<RequestErrorKind> = new Set(['network', 'offline', 'timeout'])
@@ -28,6 +34,9 @@ export function Workspace() {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
   const [desktopHistoryOpen, setDesktopHistoryOpen] = useState(true)
   const [mobileHistoryOpen, setMobileHistoryOpen] = useState(false)
+  const [shortcutsOpen, setShortcutsOpen] = useState(false)
+  const urlInputRef = useRef<HTMLInputElement>(null)
+  const { toggleTheme } = useTheme()
 
   const { send, reset: resetExecution } = execution
   const { record } = history
@@ -49,7 +58,22 @@ export function Workspace() {
   const handleNewRequest = useCallback(() => {
     actions.reset()
     resetExecution()
+    urlInputRef.current?.focus()
   }, [actions, resetExecution])
+
+  const handleLoadExample = useCallback(
+    (example: RequestDraft) => {
+      actions.load(example)
+      urlInputRef.current?.focus()
+    },
+    [actions],
+  )
+
+  const { clear: clearHistory } = history
+  const handleClearHistory = useCallback(() => {
+    clearHistory()
+    toast.success('History cleared')
+  }, [clearHistory])
 
   const handleOpenHistory = useCallback(
     (entry: HistoryEntry) => {
@@ -65,13 +89,36 @@ export function Workspace() {
 
   const historyOpen = isDesktop ? desktopHistoryOpen : mobileHistoryOpen
 
-  function toggleHistory() {
+  const toggleHistory = useCallback(() => {
     if (isDesktop) {
       setDesktopHistoryOpen((current) => !current)
     } else {
       setMobileHistoryOpen((current) => !current)
     }
-  }
+  }, [isDesktop])
+
+  const { isLoading, cancel } = execution
+  const hotkeys = useMemo<Hotkey[]>(
+    () => [
+      { key: 'Enter', mod: true, allowInEditable: true, handler: () => void handleSend() },
+      { key: 'Escape', allowInEditable: true, when: () => isLoading, handler: cancel },
+      {
+        key: 'l',
+        alt: true,
+        allowInEditable: true,
+        handler: () => {
+          urlInputRef.current?.focus()
+          urlInputRef.current?.select()
+        },
+      },
+      { key: 'n', alt: true, allowInEditable: true, handler: handleNewRequest },
+      { key: 'h', alt: true, allowInEditable: true, handler: toggleHistory },
+      { key: 't', alt: true, allowInEditable: true, handler: toggleTheme },
+      { key: '?', handler: () => setShortcutsOpen(true) },
+    ],
+    [handleSend, isLoading, cancel, handleNewRequest, toggleHistory, toggleTheme],
+  )
+  useHotkeys(hotkeys)
 
   return (
     <AppShell
@@ -81,11 +128,24 @@ export function Workspace() {
             <>
               <IconButton
                 label={historyOpen ? 'Hide history' : 'Show history'}
+                shortcut={getShortcutKeys('history')}
                 icon={<HistoryIcon />}
                 aria-pressed={historyOpen}
                 onClick={toggleHistory}
               />
-              <IconButton label="New request" icon={<FilePlus2Icon />} onClick={handleNewRequest} />
+              <IconButton
+                label="New request"
+                shortcut={getShortcutKeys('new')}
+                icon={<FilePlus2Icon />}
+                onClick={handleNewRequest}
+              />
+              <IconButton
+                label="Keyboard shortcuts"
+                shortcut={getShortcutKeys('help')}
+                icon={<KeyboardIcon />}
+                className="hidden sm:inline-flex"
+                onClick={() => setShortcutsOpen(true)}
+              />
             </>
           }
         />
@@ -100,7 +160,8 @@ export function Workspace() {
             entries={history.entries}
             onOpen={handleOpenHistory}
             onRemove={history.remove}
-            onClear={history.clear}
+            onClear={handleClearHistory}
+            onClose={isDesktop ? undefined : () => setMobileHistoryOpen(false)}
           />
         </HistorySidebar>
       }
@@ -110,6 +171,7 @@ export function Workspace() {
           <RequestBar
             method={draft.method}
             url={draft.url}
+            urlInputRef={urlInputRef}
             invalid={execution.state.status === 'error' && execution.state.error.kind === 'invalid-url'}
             onMethodChange={actions.setMethod}
             onUrlChange={actions.setUrl}
@@ -118,8 +180,16 @@ export function Workspace() {
           />
         }
         request={<RequestTabs draft={draft} actions={actions} />}
-        response={<ResponsePanel state={execution.state} onCancel={execution.cancel} onRetry={handleSend} />}
+        response={
+          <ResponsePanel
+            state={execution.state}
+            onCancel={execution.cancel}
+            onRetry={handleSend}
+            idleAction={<ExampleRequests onSelect={handleLoadExample} />}
+          />
+        }
       />
+      <ShortcutsDialog open={shortcutsOpen} onOpenChange={setShortcutsOpen} />
     </AppShell>
   )
 }
