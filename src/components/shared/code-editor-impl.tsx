@@ -179,5 +179,7 @@ export default function CodeEditor({
     })
   }, [language, readOnly, placeholder, ariaLabel])
 
-  return <div ref={containerRef} className={cn('min-h-0 overflow-hidden', className)} />
+  return (
+    <div ref={containerRef} className={cn('min-h-0 overflow-hidden font-mono text-[13px] leading-[1.6]', className)} />
+  )
 }
