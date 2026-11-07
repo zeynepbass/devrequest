@@ -1,5 +1,6 @@
 import type { RequestDraft } from '@/types/http'
 import type { RequestError } from '@/types/response'
+import { validateJson } from '@/utils/json'
 import { validateUrl } from '@/utils/url'
 import { createRequestError } from './errors'
 
@@ -66,6 +67,13 @@ export function buildRequest(draft: RequestDraft, pageProtocol: string): BuildRe
   let body: string | undefined
   if (canSendBody(draft.method) && draft.body.mode !== 'none') {
     body = draft.body[draft.body.mode]
+    if (draft.body.mode === 'json') {
+      const validation = validateJson(body)
+      if (!validation.valid) {
+        const location = validation.line ? ` (line ${validation.line}, column ${validation.column ?? 1})` : ''
+        return { ok: false, error: createRequestError('invalid-body', `${validation.message}${location}.`) }
+      }
+    }
     if (!headers.has('content-type')) {
       headers.set('content-type', DEFAULT_CONTENT_TYPE[draft.body.mode])
     }
