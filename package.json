@@ -11,8 +11,8 @@
     "typecheck": "tsc -b",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test",
-    "screenshots": "playwright test e2e/screenshots.spec.ts",
+    "test:e2e": "playwright test e2e/app.spec.ts",
+    "screenshots": "playwright test e2e/screenshots.spec.ts --workers=1",
     "check": "npm run typecheck && npm run lint && npm run test",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
