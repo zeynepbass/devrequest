@@ -1,3 +1,4 @@
+import type { AuthConfig } from '@/types/auth'
 import type {
   BodyMode,
   HttpMethod,
@@ -18,6 +19,7 @@ export type RequestAction =
   | { type: 'remove-entry'; collection: KeyValueCollection; id: string }
   | { type: 'set-body-mode'; mode: BodyMode }
   | { type: 'set-body-content'; content: string }
+  | { type: 'set-auth'; auth: AuthConfig }
   | { type: 'load'; draft: RequestDraft }
   | { type: 'reset' }
 
@@ -85,6 +87,8 @@ export function requestReducer(state: RequestDraft, action: RequestAction): Requ
         return state
       }
       return { ...state, body: { ...state.body, [state.body.mode]: action.content } }
+    case 'set-auth':
+      return { ...state, auth: action.auth }
     case 'load':
       return action.draft
     case 'reset':

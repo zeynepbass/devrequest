@@ -1,4 +1,5 @@
 import { useMemo, useReducer } from 'react'
+import type { AuthConfig } from '@/types/auth'
 import type { BodyMode, HttpMethod, KeyValueCollection, RequestDraft } from '@/types/http'
 import { createEmptyDraft } from '../model/request-draft'
 import { requestReducer, type EntryPatch } from '../model/request-reducer'
@@ -11,6 +12,7 @@ export interface RequestDraftActions {
   removeEntry: (collection: KeyValueCollection, id: string) => void
   setBodyMode: (mode: BodyMode) => void
   setBodyContent: (content: string) => void
+  setAuth: (auth: AuthConfig) => void
   load: (draft: RequestDraft) => void
   reset: () => void
 }
@@ -27,6 +29,7 @@ export function useRequestDraft() {
       removeEntry: (collection, id) => dispatch({ type: 'remove-entry', collection, id }),
       setBodyMode: (mode) => dispatch({ type: 'set-body-mode', mode }),
       setBodyContent: (content) => dispatch({ type: 'set-body-content', content }),
+      setAuth: (auth) => dispatch({ type: 'set-auth', auth }),
       load: (next) => dispatch({ type: 'load', draft: next }),
       reset: () => dispatch({ type: 'reset' }),
     }),

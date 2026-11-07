@@ -1,3 +1,4 @@
+import { applyAuth } from './apply-auth'
 import type { RequestDraft } from '@/types/http'
 import type { RequestError } from '@/types/response'
 import { validateJson } from '@/utils/json'
@@ -62,6 +63,11 @@ export function buildRequest(draft: RequestDraft, pageProtocol: string): BuildRe
         error: createRequestError('invalid-header', `The value of "${name}" contains characters that are not allowed.`),
       }
     }
+  }
+
+  const authResult = applyAuth(headers, draft.auth)
+  if (!authResult.ok) {
+    return { ok: false, error: createRequestError('invalid-auth', authResult.message) }
   }
 
   let body: string | undefined

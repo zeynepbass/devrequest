@@ -1,3 +1,4 @@
+import { AuthPanel } from '@/features/authorization/components/auth-panel'
 import { KeyValueEditor } from '@/components/shared/key-value-editor'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { KeyValueEntry, RequestDraft } from '@/types/http'
@@ -42,6 +43,10 @@ export function RequestTabs({ draft, actions }: RequestTabsProps) {
           Body
           {draft.body.mode !== 'none' ? <span aria-hidden="true" className="size-1.5 rounded-full bg-primary" /> : null}
         </TabsTrigger>
+        <TabsTrigger value="auth" className={triggerClass}>
+          Authorization
+          {draft.auth.type !== 'none' ? <span aria-hidden="true" className="size-1.5 rounded-full bg-primary" /> : null}
+        </TabsTrigger>
       </TabsList>
       <div className="min-h-0 flex-1 overflow-y-auto p-3 sm:p-4">
         <TabsContent value="params">
@@ -76,6 +81,9 @@ export function RequestTabs({ draft, actions }: RequestTabsProps) {
             onModeChange={actions.setBodyMode}
             onContentChange={actions.setBodyContent}
           />
+        </TabsContent>
+        <TabsContent value="auth">
+          <AuthPanel auth={draft.auth} onChange={actions.setAuth} />
         </TabsContent>
       </div>
     </Tabs>

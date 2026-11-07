@@ -1,3 +1,5 @@
+import type { AuthConfig } from './auth'
+
 export const HTTP_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] as const
 
 export type HttpMethod = (typeof HTTP_METHODS)[number]
@@ -27,4 +29,5 @@ export interface RequestDraft {
   params: KeyValueEntry[]
   headers: KeyValueEntry[]
   body: RequestBody
+  auth: AuthConfig
 }

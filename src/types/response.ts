@@ -18,6 +18,7 @@ export interface HttpResponse {
 export type RequestErrorKind =
   | 'invalid-url'
   | 'invalid-header'
+  | 'invalid-auth'
   | 'invalid-body'
   | 'mixed-content'
   | 'network'

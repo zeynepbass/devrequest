@@ -17,5 +17,6 @@ export function createEmptyDraft(): RequestDraft {
     params: [],
     headers: [],
     body: { mode: 'none', json: '', text: '' },
+    auth: { type: 'none' },
   }
 }

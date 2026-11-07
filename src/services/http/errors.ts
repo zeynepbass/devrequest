@@ -9,6 +9,10 @@ const DEFAULT_COPY: Record<RequestErrorKind, Pick<RequestError, 'title' | 'hints
     title: 'Invalid header',
     hints: ['Header names may only contain letters, digits and !#$%&\'*+-.^_`|~ characters.'],
   },
+  'invalid-auth': {
+    title: 'Incomplete authorization',
+    hints: ['Complete the Authorization tab or switch it to No Auth.'],
+  },
   'invalid-body': {
     title: 'Invalid request body',
     hints: ['Fix the highlighted JSON or switch the body type to Raw Text.'],
