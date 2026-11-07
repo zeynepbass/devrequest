@@ -48,7 +48,7 @@ export function Workspace() {
           />
         }
         request={<RequestTabs draft={draft} actions={actions} />}
-        response={<ResponsePanel state={execution.state} />}
+        response={<ResponsePanel state={execution.state} onCancel={execution.cancel} onRetry={handleSend} />}
       />
     </AppShell>
   )
