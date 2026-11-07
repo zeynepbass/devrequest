@@ -1,0 +1,15 @@
+export const COMMON_HEADERS = [
+  'Accept',
+  'Accept-Encoding',
+  'Accept-Language',
+  'Authorization',
+  'Cache-Control',
+  'Content-Type',
+  'If-Match',
+  'If-None-Match',
+  'Origin',
+  'Pragma',
+  'X-Api-Key',
+  'X-Request-Id',
+  'X-Requested-With',
+] as const
